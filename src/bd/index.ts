@@ -5,19 +5,31 @@ import { UpdatePasswordDto } from '../users/dto/update-user.dto';
 import { Artist } from '../artists/entities/artist.entity';
 import { CreateArtistDto } from '../artists/dto/create-artist.dto';
 import { UpdateArtistDto } from '../artists/dto/update-artist.dto';
+import { Album } from '../albums/entities/album.entity';
+import { Track } from '../tracks/entities/track.entity';
+import { CreateAlbumDto } from '../albums/dto/create-album.dto';
+import { CreateTrackDto } from '../tracks/dto/create-track.dto';
+import { UpdateAlbumDto } from '../albums/dto/update-album.dto';
+import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
 
 export class Database {
   users: User[] = [];
   artists: Artist[] = [];
+  albums: Album[] = [];
+  tracks: Track[] = [];
 
   create(
     entity: string,
-    createDto: CreateUserDto | CreateArtistDto,
+    createDto:
+      | CreateUserDto
+      | CreateArtistDto
+      | CreateAlbumDto
+      | CreateTrackDto,
   ): User | Artist {
     const date = Date.now();
     let createdEntity;
 
-    if (!(createDto instanceof CreateArtistDto)) {
+    if (createDto instanceof CreateUserDto) {
       createdEntity = {
         id: uuidv4(),
         login: createDto.login,
@@ -28,29 +40,42 @@ export class Database {
       } as User;
     }
 
-    if (!(createDto instanceof CreateUserDto)) {
+    if (createDto instanceof CreateArtistDto) {
       createdEntity = {
         id: uuidv4(),
         name: createDto.name,
-        grammy: false,
+        grammy: createDto.grammy ?? false,
       } as Artist;
+    }
+
+    if (createDto instanceof CreateAlbumDto) {
+      createdEntity = {
+        id: uuidv4(),
+        name: createDto.name,
+        year: createDto.year,
+        artistId: createDto.artistId ?? null, // refers to Artist
+      } as Album;
     }
 
     this[entity].push(createdEntity);
     return createdEntity;
   }
 
-  findAll(entity: string): User[] {
+  findAll(entity: string): User[] | Artist[] | Album[] | Track[] {
     return this[entity];
   }
 
-  findOne(entity: string, id: string): User | Artist {
+  findOne(entity: string, id: string): User | Artist | Album | Track {
     return this[entity].find((entity) => entity.id === id);
   }
 
   update(
-    entity: User | Artist,
-    updateEntityDto: UpdatePasswordDto | UpdateArtistDto,
+    entity: User | Artist | Album | Track,
+    updateEntityDto:
+      | UpdatePasswordDto
+      | UpdateArtistDto
+      | UpdateAlbumDto
+      | UpdateTrackDto,
   ) {
     for (const key in updateEntityDto) {
       entity[key] = updateEntityDto[key];
