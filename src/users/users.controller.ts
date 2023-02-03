@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -29,17 +30,17 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     const user = this.usersService.findOne(id);
     if (!user) {
-      return 'error';
+      return;
     }
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdatePasswordDto) {
-    const user = this.findOne(id);
+    const user = this.findOne(id) as User | undefined;
 
-    if (user === 'error') {
-      return user;
+    if (!user) {
+      return 'error';
     }
 
     const updatedUser = this.usersService.update(user, updateUserDto);
@@ -53,6 +54,6 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }

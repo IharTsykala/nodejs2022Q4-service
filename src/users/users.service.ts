@@ -21,10 +21,13 @@ export class UsersService {
   }
 
   update(user: User, updatePasswordDto: UpdatePasswordDto) {
+    if (updatePasswordDto.oldPassword !== user.password) {
+      return 'error';
+    }
     return this.storage.update(user, updatePasswordDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    return this.storage.remove('users', id);
   }
 }

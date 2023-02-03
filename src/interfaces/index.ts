@@ -7,11 +7,11 @@
 //   updatedAt: number; // timestamp of last update
 // }
 
-interface Artist {
-  id: string; // uuid v4
-  name: string;
-  grammy: boolean;
-}
+// interface Artist {
+//   id: string; // uuid v4
+//   name: string;
+//   grammy: boolean;
+// }
 
 interface Track {
   id: string; // uuid v4
