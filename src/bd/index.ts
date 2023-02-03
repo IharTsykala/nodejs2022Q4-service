@@ -11,12 +11,18 @@ import { CreateAlbumDto } from '../albums/dto/create-album.dto';
 import { CreateTrackDto } from '../tracks/dto/create-track.dto';
 import { UpdateAlbumDto } from '../albums/dto/update-album.dto';
 import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
+import { Favorite } from '../favorites/entities/favorite.entity';
 
 export class Database {
   users: User[] = [];
   artists: Artist[] = [];
   albums: Album[] = [];
   tracks: Track[] = [];
+  favorites: Favorite = {
+    artists: [], // favorite artists ids
+    albums: [], // favorite albums ids
+    tracks: [], // favorite tracks ids
+  };
 
   create(
     entity: string,
@@ -57,6 +63,16 @@ export class Database {
       } as Album;
     }
 
+    if (createDto instanceof CreateTrackDto) {
+      createdEntity = {
+        id: uuidv4(),
+        name: createDto.name,
+        artistId: createDto.artistId ?? null, // refers to Artist
+        albumId: createDto.albumId ?? null, // refers to Album
+        duration: createDto.duration, // integer number
+      } as Track;
+    }
+
     this[entity].push(createdEntity);
     return createdEntity;
   }
@@ -94,5 +110,20 @@ export class Database {
     }
 
     return false;
+  }
+
+  getFavorites(entity: string) {
+    return this.favorites[entity];
+  }
+
+  addFavorites(entity: string, id: string) {
+    this.favorites[entity].push(id);
+    return true;
+  }
+
+  removeFavorites(entity: string, id: string) {
+    const indexRemovedEntity = this.favorites[entity].findIndex(id);
+    this.favorites[entity].splice(indexRemovedEntity, 1);
+    return true;
   }
 }
