@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { TracksController } from './tracks.controller';
 import { Database } from '../bd';
+import { ArtistsModule } from '../artists/artists.module';
+import { AlbumsModule } from '../albums/albums.module';
 
 @Module({
   controllers: [TracksController],
@@ -12,5 +14,6 @@ import { Database } from '../bd';
       useClass: Database,
     },
   ],
+  imports: [ArtistsModule, AlbumsModule],
 })
 export class TracksModule {}

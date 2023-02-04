@@ -12,5 +12,6 @@ import { Database } from '../bd';
       useClass: Database,
     },
   ],
+  exports: [ArtistsService],
 })
 export class ArtistsModule {}

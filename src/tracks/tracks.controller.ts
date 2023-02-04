@@ -15,14 +15,36 @@ import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
+import { ArtistsService } from '../artists/artists.service';
+import { AlbumsService } from '../albums/albums.service';
 
 @Controller('track')
 export class TracksController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(
+    private readonly tracksService: TracksService,
+    private readonly artistsService: ArtistsService,
+    private readonly albumsService: AlbumsService,
+  ) {}
+
+  findOneArtist(id: string) {
+    if (!this.artistsService.findOne(id)) {
+      throw new NotFoundException();
+    }
+  }
+
+  findOneAlbum(id: string) {
+    if (!this.albumsService.findOne(id)) {
+      throw new NotFoundException();
+    }
+  }
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
     const { name, artistId, albumId, duration } = createTrackDto ?? {};
+
+    this.findOneArtist(artistId);
+
+    this.findOneAlbum(albumId);
 
     return this.tracksService.create(
       new CreateTrackDto(name, artistId, albumId, duration),
