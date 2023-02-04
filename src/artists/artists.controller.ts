@@ -3,9 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
+  NotFoundException,
+  Put,
+  ForbiddenException,
+  HttpCode,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -18,9 +22,9 @@ export class ArtistsController {
 
   @Post()
   create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistsService.create(
-      new CreateArtistDto({ ...createArtistDto }),
-    );
+    const { name, grammy } = createArtistDto ?? {};
+
+    return this.artistsService.create(new CreateArtistDto(name, grammy));
   }
 
   @Get()
@@ -29,33 +33,37 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = this.artistsService.findOne(id);
     if (!artist) {
-      return;
+      throw new NotFoundException();
     }
     return artist;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
+  @Put(':id')
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
     const artist = this.findOne(id) as Artist | undefined;
-
-    if (!artist) {
-      return 'error';
-    }
 
     const updatedArtist = this.artistsService.update(artist, updateArtistDto);
 
     if (!updatedArtist) {
-      return 'error';
+      throw new ForbiddenException();
     }
 
     return updatedArtist;
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const isRemoved = this.artistsService.remove(id);
+    if (!isRemoved) {
+      throw new NotFoundException();
+    }
     return this.artistsService.remove(id);
   }
 }
