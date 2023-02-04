@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
-import { Database } from '../bd';
+import Database from '../bd';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 
 @Injectable()
 export class TracksService {
-  constructor(@Inject('Database') private storage: Database) {}
+  constructor(private storage: Database) {}
 
   create(createTrackDto: CreateTrackDto) {
     return this.storage.create('tracks', createTrackDto);

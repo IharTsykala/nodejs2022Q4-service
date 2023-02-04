@@ -1,9 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Database } from '../bd';
+import Database from '../bd';
 
 @Injectable()
 export class FavoritesService {
-  constructor(@Inject('Database') private storage: Database) {}
+  constructor(private storage: Database) {}
+
+  getAll() {
+    return this.storage.getAllFavorites();
+  }
 
   get(entity: string) {
     return this.storage.getFavorites(entity);

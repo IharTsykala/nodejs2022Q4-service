@@ -12,9 +12,10 @@ import { CreateTrackDto } from '../tracks/dto/create-track.dto';
 import { UpdateAlbumDto } from '../albums/dto/update-album.dto';
 import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
 import { Favorite } from '../favorites/entities/favorite.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-export class Database {
+@Injectable()
+export default class Database {
   users: User[] = [];
   artists: Artist[] = [];
   albums: Album[] = [];
@@ -133,8 +134,25 @@ export class Database {
     return false;
   }
 
+  getAllFavorites() {
+    const body = {};
+
+    for (const entityCollectionName in this.favorites) {
+      body[entityCollectionName] = this.favorites[entityCollectionName].map(
+        (entityId) =>
+          this[entityCollectionName].find(
+            (itemCollection) => itemCollection.id === entityId,
+          ),
+      );
+    }
+
+    return body;
+  }
+
   getFavorites(entity: string) {
-    return this.favorites[entity];
+    return this.favorites[entity].map((entityId) =>
+      this[entity].find((itemCollection) => itemCollection.id === entityId),
+    );
   }
 
   addFavorites(entity: string, id: string) {

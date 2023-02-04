@@ -67,7 +67,12 @@ export class FavoritesController {
     return this.tracksService.findOne(id);
   }
 
-  @Get('/artists')
+  @Get()
+  getAllFavorites() {
+    return this.favoritesService.getAll();
+  }
+
+  @Get('/artist')
   getArtists() {
     return this.favoritesService.get('artists');
   }

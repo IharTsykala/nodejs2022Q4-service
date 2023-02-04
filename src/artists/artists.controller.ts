@@ -49,7 +49,6 @@ export class ArtistsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    console.log('updateArtistDto', updateArtistDto);
     const artist = this.findOne(id) as Artist | undefined;
 
     const updatedArtist = this.artistsService.update(artist, updateArtistDto);

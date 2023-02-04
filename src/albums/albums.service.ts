@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Database } from '../bd';
+// import { Database } from '../bd';
 import { Album } from './entities/album.entity';
+import Database from '../bd';
 
 @Injectable()
 export class AlbumsService {
-  constructor(@Inject('Database') private storage: Database) {}
+  constructor(private storage: Database) {}
 
   create(createAlbumDto: CreateAlbumDto) {
     return this.storage.create('albums', createAlbumDto);
