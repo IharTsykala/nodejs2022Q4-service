@@ -32,18 +32,12 @@ export class AlbumsController {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
 
-    // const artist = this.artistService.findOne(id);
-
-    // if (!artist) {
-    //   throw new NotFoundException();
-    // }
-
     return this.artistService.findOne(id);
   }
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
-    const { name, year, artistId } = createAlbumDto ?? {};
+    const { name, year, artistId = null } = createAlbumDto ?? {};
     if (artistId !== null) {
       const artist = this.findOneAlbum(artistId);
 
@@ -76,7 +70,7 @@ export class AlbumsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    const { artistId } = updateAlbumDto ?? {};
+    const { artistId = null } = updateAlbumDto ?? {};
 
     if (artistId !== null) {
       const artist = this.findOneAlbum(artistId);

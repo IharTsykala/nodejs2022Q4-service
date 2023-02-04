@@ -143,8 +143,12 @@ export class Database {
   }
 
   removeFavorites(entity: string, id: string) {
-    const indexRemovedEntity = this.favorites[entity].findIndex(id);
-    this.favorites[entity].splice(indexRemovedEntity, 1);
-    return true;
+    const indexRemovedEntity = this.favorites[entity].findIndex(
+      (entity) => entity.id === id,
+    );
+    if (indexRemovedEntity) {
+      this.favorites[entity].splice(indexRemovedEntity, 1);
+      return true;
+    }
   }
 }

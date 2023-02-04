@@ -4,9 +4,7 @@ export class CreateTrackDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-  @IsNotEmpty()
   artistId: string | null; // refers to Artist
-  @IsNotEmpty()
   albumId: string | null; // refers to Album
   @IsNumber()
   @IsNotEmpty()

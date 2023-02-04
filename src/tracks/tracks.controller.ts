@@ -54,7 +54,12 @@ export class TracksController {
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
-    const { name, artistId, albumId, duration } = createTrackDto ?? {};
+    const {
+      name,
+      artistId = null,
+      albumId = null,
+      duration,
+    } = createTrackDto ?? {};
 
     if (artistId !== null) {
       const artist = this.findOneArtist(artistId);
@@ -108,7 +113,7 @@ export class TracksController {
   ) {
     const track = this.findOne(id) as Track | undefined;
 
-    const { artistId, albumId } = updateTrackDto ?? {};
+    const { artistId = null, albumId = null } = updateTrackDto ?? {};
 
     if (artistId !== null) {
       const artist = this.findOneArtist(artistId);
