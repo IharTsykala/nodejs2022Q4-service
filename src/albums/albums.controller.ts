@@ -10,6 +10,8 @@ import {
   Put,
   ForbiddenException,
   HttpCode,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -26,24 +28,28 @@ export class AlbumsController {
   ) {}
 
   findOneAlbum(id: string) {
-    if (uuidValidate(id)) {
-      throw new ParseUUIDPipe();
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
 
-    const artist = this.artistService.findOne(id);
+    // const artist = this.artistService.findOne(id);
 
-    if (!artist) {
-      throw new NotFoundException();
-    }
+    // if (!artist) {
+    //   throw new NotFoundException();
+    // }
 
-    return artist;
+    return this.artistService.findOne(id);
   }
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
     const { name, year, artistId } = createAlbumDto ?? {};
 
-    this.findOneAlbum(artistId);
+    const artist = this.findOneAlbum(artistId);
+
+    if (!artist) {
+      throw new NotFoundException();
+    }
 
     return this.albumsService.create(new CreateAlbumDto(name, year, artistId));
   }
@@ -71,7 +77,11 @@ export class AlbumsController {
   ) {
     const { artistId } = updateAlbumDto ?? {};
 
-    this.findOneAlbum(artistId);
+    const artist = this.findOneAlbum(artistId);
+
+    if (!artist) {
+      throw new NotFoundException();
+    }
 
     const album = this.findOne(id) as Album | undefined;
 

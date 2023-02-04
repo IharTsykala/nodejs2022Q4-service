@@ -10,6 +10,8 @@ import {
   NotFoundException,
   ForbiddenException,
   HttpCode,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -17,6 +19,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
+import { validate as uuidValidate } from 'uuid';
 
 @Controller('track')
 export class TracksController {
@@ -27,24 +30,39 @@ export class TracksController {
   ) {}
 
   findOneArtist(id: string) {
-    if (!this.artistsService.findOne(id)) {
-      throw new NotFoundException();
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
+
+    return this.artistsService.findOne(id);
+
+    // if (!this.artistsService.findOne(id)) {
+    //   throw new NotFoundException();
+    // }
   }
 
   findOneAlbum(id: string) {
-    if (!this.albumsService.findOne(id)) {
-      throw new NotFoundException();
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
+    // if (!this.albumsService.findOne(id)) {
+    //   throw new NotFoundException();
+    // }
+
+    return this.albumsService.findOne(id);
   }
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
     const { name, artistId, albumId, duration } = createTrackDto ?? {};
 
-    this.findOneArtist(artistId);
+    const artist = this.findOneArtist(artistId);
 
-    this.findOneAlbum(albumId);
+    const album = this.findOneAlbum(albumId);
+
+    if (!artist || !album) {
+      throw new NotFoundException();
+    }
 
     return this.tracksService.create(
       new CreateTrackDto(name, artistId, albumId, duration),
@@ -73,6 +91,16 @@ export class TracksController {
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
     const track = this.findOne(id) as Track | undefined;
+
+    const { artistId, albumId } = updateTrackDto ?? {};
+
+    const artist = this.findOneArtist(artistId);
+
+    const album = this.findOneAlbum(albumId);
+
+    if (!artist || !album) {
+      throw new NotFoundException();
+    }
 
     const updatedTrack = this.tracksService.update(track, updateTrackDto);
 

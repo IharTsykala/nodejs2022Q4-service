@@ -15,5 +15,6 @@ import { AlbumsModule } from '../albums/albums.module';
     },
   ],
   imports: [ArtistsModule, AlbumsModule],
+  exports: [TracksService],
 })
 export class TracksModule {}

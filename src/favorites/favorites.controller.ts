@@ -1,52 +1,153 @@
-import { Controller, Post, Param, Delete, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  Delete,
+  Get,
+  ParseUUIDPipe,
+  HttpStatus,
+  HttpException,
+  HttpCode,
+  NotFoundException,
+} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
+import { TracksService } from '../tracks/tracks.service';
+import { ArtistsService } from '../artists/artists.service';
+import { AlbumsService } from '../albums/albums.service';
+import { validate as uuidValidate } from 'uuid';
 
 @Controller('favs')
 export class FavoritesController {
-  constructor(private readonly favoritesService: FavoritesService) {}
+  constructor(
+    private readonly favoritesService: FavoritesService,
+    private readonly tracksService: TracksService,
+    private readonly artistsService: ArtistsService,
+    private readonly albumsService: AlbumsService,
+  ) {}
+
+  findOneArtist(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
+    }
+    // if (!this.artistsService.findOne(id)) {
+    //   throw new HttpException(
+    //     'unprocessable_entity',
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+
+    return this.artistsService.findOne(id);
+  }
+
+  findOneAlbum(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
+    }
+    // if (!this.albumsService.findOne(id)) {
+    //   throw new HttpException(
+    //     'unprocessable_entity',
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+
+    return this.albumsService.findOne(id);
+  }
+
+  findOneTrack(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
+    }
+    // if (!this.tracksService.findOne(id)) {
+    //   throw new HttpException(
+    //     'unprocessable_entity',
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+
+    return this.tracksService.findOne(id);
+  }
 
   @Get('/artists')
-  getArtists(@Param('id') id: string) {
+  getArtists() {
     return this.favoritesService.get('artists');
   }
 
   @Post('/artist/:id')
-  createArtist(@Param('id') id: string) {
+  createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const artist = this.findOneArtist(id);
+
+    if (!artist) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.add('artists', id);
   }
 
+  @HttpCode(204)
   @Delete('/artist/:id')
-  removeArtist(@Param('id') id: string) {
+  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const artist = this.findOneArtist(id);
+
+    if (!artist) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.remove('artists', id);
   }
 
   @Get('/albums')
-  getAlbums(@Param('id') id: string) {
+  getAlbums() {
     return this.favoritesService.get('albums');
   }
 
   @Post('/album/:id')
-  createAlbum(@Param('id') id: string) {
+  createAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = this.findOneAlbum(id);
+
+    if (!album) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.add('albums', id);
   }
 
+  @HttpCode(204)
   @Delete('/album/:id')
-  removeAlbum(@Param('id') id: string) {
+  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = this.findOneAlbum(id);
+
+    if (!album) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.remove('albums', id);
   }
 
   @Get('/tracks')
-  getTracks(@Param('id') id: string) {
+  getTracks() {
     return this.favoritesService.get('tracks');
   }
 
   @Post('/track/:id')
-  createTrack(@Param('id') id: string) {
+  createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = this.findOneTrack(id);
+
+    if (!track) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.add('tracks', id);
   }
 
+  @HttpCode(204)
   @Delete('/track/:id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = this.findOneTrack(id);
+
+    if (!track) {
+      throw new NotFoundException();
+    }
+
     return this.favoritesService.remove('tracks', id);
   }
 }

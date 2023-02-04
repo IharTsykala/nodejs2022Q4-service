@@ -98,6 +98,8 @@ export class Database {
       entity instanceof User
     ) {
       entity.password = updateEntityDto.newPassword;
+      entity.version = entity.version + 1;
+      entity.updatedAt = Date.now();
     } else {
       for (const key in updateEntityDto) {
         entity[key] = updateEntityDto[key];
