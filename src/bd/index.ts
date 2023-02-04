@@ -31,19 +31,19 @@ export class Database {
       | CreateArtistDto
       | CreateAlbumDto
       | CreateTrackDto,
-  ): User | Artist {
+  ): User | Artist | Album | Track {
     const date = Date.now();
     let createdEntity;
 
     if (createDto instanceof CreateUserDto) {
-      createdEntity = {
+      createdEntity = new User({
         id: uuidv4(),
         login: createDto.login,
         password: createDto.password,
         version: 1,
         createdAt: date,
         updatedAt: date,
-      } as User;
+      });
     }
 
     if (createDto instanceof CreateArtistDto) {
@@ -93,9 +93,17 @@ export class Database {
       | UpdateAlbumDto
       | UpdateTrackDto,
   ) {
-    for (const key in updateEntityDto) {
-      entity[key] = updateEntityDto[key];
+    if (
+      updateEntityDto instanceof UpdatePasswordDto &&
+      entity instanceof User
+    ) {
+      entity.password = updateEntityDto.newPassword;
+    } else {
+      for (const key in updateEntityDto) {
+        entity[key] = updateEntityDto[key];
+      }
     }
+
     return entity;
   }
 

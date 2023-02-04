@@ -22,9 +22,15 @@ export class UsersService {
 
   update(user: User, updatePasswordDto: UpdatePasswordDto) {
     if (updatePasswordDto.oldPassword !== user.password) {
-      return 'error';
+      return;
     }
-    return this.storage.update(user, updatePasswordDto);
+
+    const { oldPassword, newPassword } = updatePasswordDto;
+
+    return this.storage.update(
+      user,
+      new UpdatePasswordDto(oldPassword, newPassword),
+    );
   }
 
   remove(id: string) {
