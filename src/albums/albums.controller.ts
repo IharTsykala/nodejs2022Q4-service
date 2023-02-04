@@ -44,11 +44,12 @@ export class AlbumsController {
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
     const { name, year, artistId } = createAlbumDto ?? {};
+    if (artistId !== null) {
+      const artist = this.findOneAlbum(artistId);
 
-    const artist = this.findOneAlbum(artistId);
-
-    if (!artist) {
-      throw new NotFoundException();
+      if (!artist) {
+        throw new NotFoundException();
+      }
     }
 
     return this.albumsService.create(new CreateAlbumDto(name, year, artistId));
@@ -77,10 +78,12 @@ export class AlbumsController {
   ) {
     const { artistId } = updateAlbumDto ?? {};
 
-    const artist = this.findOneAlbum(artistId);
+    if (artistId !== null) {
+      const artist = this.findOneAlbum(artistId);
 
-    if (!artist) {
-      throw new NotFoundException();
+      if (!artist) {
+        throw new NotFoundException();
+      }
     }
 
     const album = this.findOne(id) as Album | undefined;

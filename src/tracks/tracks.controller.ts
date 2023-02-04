@@ -56,13 +56,29 @@ export class TracksController {
   create(@Body() createTrackDto: CreateTrackDto) {
     const { name, artistId, albumId, duration } = createTrackDto ?? {};
 
-    const artist = this.findOneArtist(artistId);
+    if (artistId !== null) {
+      const artist = this.findOneArtist(artistId);
 
-    const album = this.findOneAlbum(albumId);
-
-    if (!artist || !album) {
-      throw new NotFoundException();
+      if (!artist) {
+        throw new NotFoundException();
+      }
     }
+
+    if (albumId !== null) {
+      const album = this.findOneAlbum(albumId);
+
+      if (!album) {
+        throw new NotFoundException();
+      }
+    }
+
+    // const artist = this.findOneArtist(artistId);
+    //
+    // const album = this.findOneAlbum(albumId);
+    //
+    // if (!artist || !album) {
+    //   throw new NotFoundException();
+    // }
 
     return this.tracksService.create(
       new CreateTrackDto(name, artistId, albumId, duration),
@@ -94,13 +110,29 @@ export class TracksController {
 
     const { artistId, albumId } = updateTrackDto ?? {};
 
-    const artist = this.findOneArtist(artistId);
+    if (artistId !== null) {
+      const artist = this.findOneArtist(artistId);
 
-    const album = this.findOneAlbum(albumId);
-
-    if (!artist || !album) {
-      throw new NotFoundException();
+      if (!artist) {
+        throw new NotFoundException();
+      }
     }
+
+    if (albumId !== null) {
+      const album = this.findOneAlbum(albumId);
+
+      if (!album) {
+        throw new NotFoundException();
+      }
+    }
+
+    // const artist = this.findOneArtist(artistId);
+    //
+    // const album = this.findOneAlbum(albumId);
+    //
+    // if (!artist || !album) {
+    //   throw new NotFoundException();
+    // }
 
     const updatedTrack = this.tracksService.update(track, updateTrackDto);
 

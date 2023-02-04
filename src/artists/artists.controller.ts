@@ -10,6 +10,8 @@ import {
   Put,
   ForbiddenException,
   HttpCode,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -35,6 +37,7 @@ export class ArtistsController {
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = this.artistsService.findOne(id);
+
     if (!artist) {
       throw new NotFoundException();
     }
@@ -46,6 +49,7 @@ export class ArtistsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
+    console.log('updateArtistDto', updateArtistDto);
     const artist = this.findOne(id) as Artist | undefined;
 
     const updatedArtist = this.artistsService.update(artist, updateArtistDto);
@@ -53,6 +57,10 @@ export class ArtistsController {
     if (!updatedArtist) {
       throw new ForbiddenException();
     }
+
+    // if (updateArtistDto.name === 'TEST_artist') {
+    //   throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
+    // }
 
     return updatedArtist;
   }

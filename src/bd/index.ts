@@ -12,6 +12,7 @@ import { CreateTrackDto } from '../tracks/dto/create-track.dto';
 import { UpdateAlbumDto } from '../albums/dto/update-album.dto';
 import { UpdateTrackDto } from '../tracks/dto/update-track.dto';
 import { Favorite } from '../favorites/entities/favorite.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class Database {
   users: User[] = [];
@@ -35,6 +36,8 @@ export class Database {
     const date = Date.now();
     let createdEntity;
 
+    let isDuplicate;
+
     if (createDto instanceof CreateUserDto) {
       createdEntity = new User({
         id: uuidv4(),
@@ -47,6 +50,10 @@ export class Database {
     }
 
     if (createDto instanceof CreateArtistDto) {
+      isDuplicate = this.artists.find(
+        (artist) => artist.name === createDto.name,
+      );
+
       createdEntity = {
         id: uuidv4(),
         name: createDto.name,
@@ -72,6 +79,10 @@ export class Database {
         duration: createDto.duration, // integer number
       } as Track;
     }
+
+    // if (isDuplicate) {
+    //   throw new HttpException('duplicate name', HttpStatus.BAD_REQUEST);
+    // }
 
     this[entity].push(createdEntity);
     return createdEntity;
