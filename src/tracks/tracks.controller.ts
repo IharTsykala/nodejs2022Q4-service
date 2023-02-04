@@ -3,9 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
+  Put,
+  NotFoundException,
+  ForbiddenException,
+  HttpCode,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -18,7 +22,11 @@ export class TracksController {
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
-    return this.tracksService.create(createTrackDto);
+    const { name, artistId, albumId, duration } = createTrackDto ?? {};
+
+    return this.tracksService.create(
+      new CreateTrackDto(name, artistId, albumId, duration),
+    );
   }
 
   @Get()
@@ -27,29 +35,41 @@ export class TracksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tracksService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
-    const track = this.findOne(id) as Track | undefined;
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = this.tracksService.findOne(id);
 
     if (!track) {
-      return 'error';
+      throw new NotFoundException();
     }
+
+    return track;
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
+  ) {
+    const track = this.findOne(id) as Track | undefined;
 
     const updatedTrack = this.tracksService.update(track, updateTrackDto);
 
     if (!updatedTrack) {
-      return 'error';
+      throw new ForbiddenException();
     }
 
     return updatedTrack;
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const isRemoved = this.tracksService.remove(id);
+
+    if (!isRemoved) {
+      throw new NotFoundException();
+    }
+
     return this.tracksService.remove(id);
   }
 }
