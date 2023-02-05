@@ -10,8 +10,6 @@ import {
   Put,
   ForbiddenException,
   HttpCode,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -56,10 +54,6 @@ export class ArtistsController {
     if (!updatedArtist) {
       throw new ForbiddenException();
     }
-
-    // if (updateArtistDto.name === 'TEST_artist') {
-    //   throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
-    // }
 
     return updatedArtist;
   }

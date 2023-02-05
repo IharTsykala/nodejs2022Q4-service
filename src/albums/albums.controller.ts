@@ -39,8 +39,6 @@ export class AlbumsController {
   create(@Body() createAlbumDto: CreateAlbumDto) {
     const { name, year, artistId = null } = createAlbumDto ?? {};
 
-    // console.log('artistId', artistId, createAlbumDto);
-
     if (artistId !== null) {
       const artist = this.findOneAlbum(artistId);
 
@@ -75,8 +73,6 @@ export class AlbumsController {
   ) {
     const { artistId = null } = updateAlbumDto ?? {};
 
-    // console.log('artistId', artistId);
-
     if (artistId !== null) {
       const artist = this.findOneAlbum(artistId);
 
@@ -87,11 +83,7 @@ export class AlbumsController {
 
     const album = this.findOne(id) as Album | undefined;
 
-    // console.log('album', album);
-
     const updatedAlbum = this.albumsService.update(album, updateAlbumDto);
-
-    console.log('updatedAlbum', updatedAlbum);
 
     if (!updatedAlbum) {
       throw new ForbiddenException();

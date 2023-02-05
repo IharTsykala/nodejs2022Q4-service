@@ -35,19 +35,12 @@ export class TracksController {
     }
 
     return this.artistsService.findOne(id);
-
-    // if (!this.artistsService.findOne(id)) {
-    //   throw new NotFoundException();
-    // }
   }
 
   findOneAlbum(id: string) {
     if (!uuidValidate(id)) {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
-    // if (!this.albumsService.findOne(id)) {
-    //   throw new NotFoundException();
-    // }
 
     return this.albumsService.findOne(id);
   }
@@ -76,14 +69,6 @@ export class TracksController {
         throw new NotFoundException();
       }
     }
-
-    // const artist = this.findOneArtist(artistId);
-    //
-    // const album = this.findOneAlbum(albumId);
-    //
-    // if (!artist || !album) {
-    //   throw new NotFoundException();
-    // }
 
     return this.tracksService.create(
       new CreateTrackDto(name, artistId, albumId, duration),
@@ -130,14 +115,6 @@ export class TracksController {
         throw new NotFoundException();
       }
     }
-
-    // const artist = this.findOneArtist(artistId);
-    //
-    // const album = this.findOneAlbum(albumId);
-    //
-    // if (!artist || !album) {
-    //   throw new NotFoundException();
-    // }
 
     const updatedTrack = this.tracksService.update(track, updateTrackDto);
 

@@ -37,8 +37,6 @@ export default class Database {
     const date = Date.now();
     let createdEntity;
 
-    let isDuplicate;
-
     if (createDto instanceof CreateUserDto) {
       createdEntity = new User({
         id: uuidv4(),

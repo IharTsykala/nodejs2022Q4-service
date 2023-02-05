@@ -6,12 +6,8 @@ export class UpdateArtistDto extends PartialType(CreateArtistDto) {
   @IsString()
   @IsNotEmpty()
   name: string;
+
   @IsBoolean()
   @IsNotEmpty()
   grammy: boolean;
-
-  // constructor({ name, grammy }) {
-  //   this.name = name;
-  //   this.grammy = grammy;
-  // }
 }
