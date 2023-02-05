@@ -29,12 +29,6 @@ export class FavoritesController {
     if (!uuidValidate(id)) {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
-    // if (!this.artistsService.findOne(id)) {
-    //   throw new HttpException(
-    //     'unprocessable_entity',
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
 
     return this.artistsService.findOne(id);
   }
@@ -43,12 +37,6 @@ export class FavoritesController {
     if (!uuidValidate(id)) {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
-    // if (!this.albumsService.findOne(id)) {
-    //   throw new HttpException(
-    //     'unprocessable_entity',
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
 
     return this.albumsService.findOne(id);
   }
@@ -57,12 +45,6 @@ export class FavoritesController {
     if (!uuidValidate(id)) {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
-    // if (!this.tracksService.findOne(id)) {
-    //   throw new HttpException(
-    //     'unprocessable_entity',
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
 
     return this.tracksService.findOne(id);
   }
@@ -82,7 +64,7 @@ export class FavoritesController {
     const artist = this.findOneArtist(id);
 
     if (!artist) {
-      throw new NotFoundException();
+      throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.favoritesService.add('artists', id);
@@ -110,7 +92,7 @@ export class FavoritesController {
     const album = this.findOneAlbum(id);
 
     if (!album) {
-      throw new NotFoundException();
+      throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.favoritesService.add('albums', id);
@@ -138,7 +120,7 @@ export class FavoritesController {
     const track = this.findOneTrack(id);
 
     if (!track) {
-      throw new NotFoundException();
+      throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.favoritesService.add('tracks', id);

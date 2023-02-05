@@ -51,10 +51,6 @@ export default class Database {
     }
 
     if (createDto instanceof CreateArtistDto) {
-      isDuplicate = this.artists.find(
-        (artist) => artist.name === createDto.name,
-      );
-
       createdEntity = {
         id: uuidv4(),
         name: createDto.name,
@@ -80,10 +76,6 @@ export default class Database {
         duration: createDto.duration, // integer number
       } as Track;
     }
-
-    // if (isDuplicate) {
-    //   throw new HttpException('duplicate name', HttpStatus.BAD_REQUEST);
-    // }
 
     this[entity].push(createdEntity);
     return createdEntity;
@@ -121,6 +113,21 @@ export default class Database {
     return entity;
   }
 
+  removeEntityIdById(entity: string, id) {
+    const entityItem = this[`${entity}s`].find(
+      (entityItem) =>
+        entityItem[`artistId`] === id || entityItem[`albumId`] === id,
+    );
+
+    if (entityItem && entityItem[`artistId`] === id) {
+      entityItem[`artistId`] = null;
+    }
+
+    if (entityItem && entityItem[`albumId`] === id) {
+      entityItem[`albumId`] = null;
+    }
+  }
+
   remove(entity: string, id: string): boolean {
     const indexRemovedEntity = this[entity].findIndex(
       (entity) => entity.id === id,
@@ -128,6 +135,9 @@ export default class Database {
 
     if (indexRemovedEntity !== -1) {
       this[entity].splice(indexRemovedEntity, 1);
+      ['album', 'track'].forEach((entity) =>
+        this.removeEntityIdById(entity, id),
+      );
       return true;
     }
 
@@ -138,12 +148,13 @@ export default class Database {
     const body = {};
 
     for (const entityCollectionName in this.favorites) {
-      body[entityCollectionName] = this.favorites[entityCollectionName].map(
-        (entityId) =>
+      body[entityCollectionName] = this.favorites[entityCollectionName]
+        .map((entityId) =>
           this[entityCollectionName].find(
             (itemCollection) => itemCollection.id === entityId,
           ),
-      );
+        )
+        .filter((entity) => entity);
     }
 
     return body;
