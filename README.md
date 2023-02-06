@@ -21,6 +21,8 @@ npm install
 
 ```
 npm start
+
+**Create .env and copy past content from .env.example file**
 ```
 
 After starting the app on port (4000 as default) you can open

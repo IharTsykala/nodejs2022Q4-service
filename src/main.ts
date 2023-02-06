@@ -12,6 +12,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('Nodejs2022Q4-service example')
     .setDescription('The nodejs2022Q4-service API description')
@@ -20,6 +22,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('swagger', app, document);
 
   await app.listen(PORT);
