@@ -35,8 +35,3 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .evn
-
-database/my_db
-database/logs
-/my_db
-/logs

@@ -36,8 +36,3 @@ lerna-debug.log*
 
 npm-debug.log
 .env
-
-/database/my_db
-/database/logs
-/my_db
-/logs
