@@ -6,9 +6,9 @@ services:
     build:
       context: .
       dockerfile: ./database/Dockerfile
-    restart: unless-stopped
     volumes:
-      - ./my_db:/var/lib/postgresql/data
+      - my_db:/var/lib/postgresql/data/pgdata
+      - logs:/var/lib/postgresql/postgresql.log
     env_file:
       - .env
     ports:
@@ -21,42 +21,48 @@ services:
     logging:
       options:
         max-size: 10m
-        max-file: "3"
+        max-file: "10"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U my-db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+    restart: unless-stopped
     networks:
-      - my_db
+      - my_network
 
   my_app:
     container_name: my_app
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     volumes:
-      - /app
-      - /app/node_modules
+      - .:/app
+      - nodemodules:/app/node_modules
     env_file:
       - .env
     ports:
       - ${PORT}:${PORT}
     command: npm run start:dev
-    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-my_db}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
       POSTGRES_DB: ${POSTGRES_DB:-rest_api}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_HOST: my_db
+    restart: unless-stopped
     depends_on:
       - my_db
     networks:
-      - my_db
+      - my_network
 
 volumes:
   my_db:
+  logs:
+  nodemodules:
 
 networks:
-  my_db:
+  my_network:
+    name: my_network
     driver: bridge
