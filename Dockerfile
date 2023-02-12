@@ -1,6 +1,6 @@
 FROM node:18-alpine3.17
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package.json package-lock.json ./
 
@@ -8,7 +8,7 @@ RUN npm install && npm cache clean --force
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE ${PORT}
 
 CMD [ "npm", "run", "start:dev" ]
 

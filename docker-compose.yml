@@ -1,8 +1,62 @@
-version: "3.0"
+version: "3.9"
 
 services:
-  my-app:
-    image: nest-app
-    build: .
+  my_db:
+    container_name: my_db
+    build:
+      context: .
+      dockerfile: ./database/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./my_db:/var/lib/postgresql/data
+    env_file:
+      - .env
     ports:
-      - "4000:4000"
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-my_bd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-rest_api}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U my-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - my_db
+
+  my_app:
+    container_name: my_app
+    build: .
+    volumes:
+      - /app
+      - /app/node_modules
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-my_db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-rest_api}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: my_db
+    depends_on:
+      - my_db
+    networks:
+      - my_db
+
+volumes:
+  my_db:
+
+networks:
+  my_db:
+    driver: bridge
