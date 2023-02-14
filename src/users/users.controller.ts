@@ -106,7 +106,7 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException();
     }
-    return this.usersService.findOne(id);
+    return user;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -139,11 +139,11 @@ export class UsersController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not found',
   })
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdatePasswordDto,
   ) {
-    const user = this.findOne(id) as User | undefined;
+    const user = (await this.findOne(id)) as User | undefined;
 
     const updatedUser = this.usersService.update(user, updateUserDto);
 
@@ -172,11 +172,12 @@ export class UsersController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not found',
   })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const isRemoved = this.usersService.remove(id);
-    if (!isRemoved) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const user = (await this.findOne(id)) as User | undefined;
+
+    if (!user) {
       throw new NotFoundException();
     }
-    return this.usersService.remove(id);
+    return await this.usersService.remove(user);
   }
 }

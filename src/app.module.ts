@@ -7,6 +7,8 @@ import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { DBModule } from './bd/bd.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from './orm.config';
 
 @Module({
   imports: [
@@ -15,7 +17,8 @@ import { DBModule } from './bd/bd.module';
     TracksModule,
     AlbumsModule,
     FavoritesModule,
-    DBModule,
+    // DBModule,
+    TypeOrmModule.forRootAsync(typeOrmConfig),
   ],
   controllers: [AppController],
   providers: [AppService],
