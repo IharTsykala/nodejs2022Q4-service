@@ -17,7 +17,7 @@ import { typeOrmConfig } from './orm.config';
     TracksModule,
     AlbumsModule,
     FavoritesModule,
-    // DBModule,
+    DBModule,
     TypeOrmModule.forRootAsync(typeOrmConfig),
   ],
   controllers: [AppController],

@@ -19,6 +19,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { validate as uuidValidate } from 'uuid';
+import { Artist } from '../artists/entities/artist.entity';
 
 @Controller('album')
 export class AlbumsController {
@@ -56,8 +57,8 @@ export class AlbumsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const album = this.albumsService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = await this.albumsService.findOne(id);
 
     if (!album) {
       throw new NotFoundException();
@@ -67,7 +68,7 @@ export class AlbumsController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
@@ -81,9 +82,9 @@ export class AlbumsController {
       }
     }
 
-    const album = this.findOne(id) as Album | undefined;
+    const album = (await this.findOne(id)) as Album | undefined;
 
-    const updatedAlbum = this.albumsService.update(album, updateAlbumDto);
+    const updatedAlbum = await this.albumsService.update(album, updateAlbumDto);
 
     if (!updatedAlbum) {
       throw new ForbiddenException();
@@ -94,13 +95,13 @@ export class AlbumsController {
 
   @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const isRemoved = this.albumsService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = (await this.findOne(id)) as Album | undefined;
 
-    if (!isRemoved) {
+    if (!album) {
       throw new NotFoundException();
     }
 
-    return this.albumsService.remove(id);
+    return this.albumsService.remove(album);
   }
 }

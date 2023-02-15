@@ -43,8 +43,8 @@ export default class Database {
         login: createDto.login,
         password: createDto.password,
         version: 1,
-        createdAt: date,
-        updatedAt: date,
+        createdAt: new Date(date),
+        updatedAt: new Date(date),
       });
     }
 
@@ -101,7 +101,7 @@ export default class Database {
     ) {
       entity.password = updateEntityDto.newPassword;
       entity.version = entity.version + 1;
-      entity.updatedAt = Date.now();
+      entity.updatedAt = new Date(Date.now());
     } else {
       for (const key in updateEntityDto) {
         entity[key] = updateEntityDto[key];

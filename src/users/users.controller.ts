@@ -76,8 +76,8 @@ export class UsersController {
       example: [schema],
     },
   })
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -101,8 +101,8 @@ export class UsersController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not found',
   })
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = this.usersService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const user = await this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException();
     }
