@@ -6,7 +6,6 @@ import { ArtistsModule } from './artists/artists.module';
 import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
-// import { DBModule } from './bd/bd.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmAsyncConfig } from './orm.config';
 
@@ -17,7 +16,6 @@ import { typeOrmAsyncConfig } from './orm.config';
     AlbumsModule,
     TracksModule,
     FavoritesModule,
-    // DBModule,
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
   ],
   controllers: [AppController],

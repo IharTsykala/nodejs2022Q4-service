@@ -27,14 +27,14 @@ export class Album {
   @Column({ nullable: true })
   artistId: string | null; // refers to Artist
 
-  @ManyToOne(() => Artist, (artist) => artist.albums, {
-    nullable: true,
-    onDelete: 'SET NULL',
-  })
-  @Exclude()
-  artist: Artist;
-
-  @OneToMany(() => Track, (track) => track.album, { cascade: true })
-  @Exclude()
-  tracks: Track[];
+  // @ManyToOne(() => Artist, (artist) => artist.albums, {
+  //   nullable: true,
+  //   onDelete: 'SET NULL',
+  // })
+  // @Exclude()
+  // artist: Artist;
+  //
+  // @OneToMany(() => Track, (track) => track.album, { cascade: true })
+  // @Exclude()
+  // tracks: Track[];
 }
