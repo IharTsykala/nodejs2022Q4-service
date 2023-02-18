@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker": "docker-compose up",
+    "docker": "docker-compose up --build",
     "docker:scan": "docker scan my_app",
     "prebuild": "rimraf dist",
     "build": "nest build",

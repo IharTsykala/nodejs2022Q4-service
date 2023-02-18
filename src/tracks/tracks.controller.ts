@@ -20,6 +20,7 @@ import { Track } from './entities/track.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
 import { validate as uuidValidate } from 'uuid';
+import { Artist } from '../artists/entities/artist.entity';
 
 @Controller('track')
 export class TracksController {
@@ -92,11 +93,11 @@ export class TracksController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    const track = this.findOne(id) as Track | undefined;
+    const track = (await this.findOne(id)) as Track | undefined;
 
     const { artistId = null, albumId = null } = updateTrackDto ?? {};
 
@@ -127,13 +128,13 @@ export class TracksController {
 
   @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const isRemoved = this.tracksService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = (await this.findOne(id)) as Track | undefined;
 
-    if (!isRemoved) {
+    if (!track) {
       throw new NotFoundException();
     }
 
-    return this.tracksService.remove(id);
+    return this.tracksService.remove(track);
   }
 }

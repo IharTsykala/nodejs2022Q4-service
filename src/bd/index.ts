@@ -20,11 +20,11 @@ export default class Database {
   artists: Artist[] = [];
   albums: Album[] = [];
   tracks: Track[] = [];
-  favorites: Favorite = {
-    artists: [], // favorite artists ids
-    albums: [], // favorite albums ids
-    tracks: [], // favorite tracks ids
-  };
+  // favorites: Favorite = {
+  //   artists: [], // favorite artists ids
+  //   albums: [], // favorite albums ids
+  //   tracks: [], // favorite tracks ids
+  // };
 
   create(
     entity: string,
@@ -142,40 +142,40 @@ export default class Database {
     return false;
   }
 
-  getAllFavorites() {
-    const body = {};
+  // getAllFavorites() {
+  //   const body = {};
+  //
+  //   for (const entityCollectionName in this.favorites) {
+  //     body[entityCollectionName] = this.favorites[entityCollectionName]
+  //       .map((entityId) =>
+  //         this[entityCollectionName].find(
+  //           (itemCollection) => itemCollection.id === entityId,
+  //         ),
+  //       )
+  //       .filter((entity) => entity);
+  //   }
+  //
+  //   return body;
+  // }
 
-    for (const entityCollectionName in this.favorites) {
-      body[entityCollectionName] = this.favorites[entityCollectionName]
-        .map((entityId) =>
-          this[entityCollectionName].find(
-            (itemCollection) => itemCollection.id === entityId,
-          ),
-        )
-        .filter((entity) => entity);
-    }
+  // getFavorites(entity: string) {
+  //   return this.favorites[entity].map((entityId) =>
+  //     this[entity].find((itemCollection) => itemCollection.id === entityId),
+  //   );
+  // }
 
-    return body;
-  }
+  // addFavorites(entity: string, id: string) {
+  //   this.favorites[entity].push(id);
+  //   return true;
+  // }
 
-  getFavorites(entity: string) {
-    return this.favorites[entity].map((entityId) =>
-      this[entity].find((itemCollection) => itemCollection.id === entityId),
-    );
-  }
-
-  addFavorites(entity: string, id: string) {
-    this.favorites[entity].push(id);
-    return true;
-  }
-
-  removeFavorites(entity: string, id: string) {
-    const indexRemovedEntity = this.favorites[entity].findIndex(
-      (entity) => entity.id === id,
-    );
-    if (indexRemovedEntity) {
-      this.favorites[entity].splice(indexRemovedEntity, 1);
-      return true;
-    }
-  }
+  // removeFavorites(entity: string, id: string) {
+  //   const indexRemovedEntity = this.favorites[entity].findIndex(
+  //     (entity) => entity.id === id,
+  //   );
+  //   if (indexRemovedEntity) {
+  //     this.favorites[entity].splice(indexRemovedEntity, 1);
+  //     return true;
+  //   }
+  // }
 }
