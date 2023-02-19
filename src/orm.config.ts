@@ -1,5 +1,11 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { Album } from './albums/entities/album.entity';
+import { Track } from './tracks/entities/track.entity';
+import { Artist } from './artists/entities/artist.entity';
+import { User } from './users/entities/user.entity';
+import { Favorite } from './favorites/entities/favorite.entity';
 
 export const typeOrmAsyncConfig: TypeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -26,3 +32,14 @@ export const typeOrmAsyncConfig: TypeOrmModuleOptions = {
     },
   }),
 } as TypeOrmModuleOptions;
+
+const typeOrmConfig: DataSourceOptions = {
+  type: 'postgres',
+  url: process.env.POSTGRES_DB,
+  synchronize: false,
+  entities: [Album, Track, Artist, User, Favorite],
+  migrations: [__dirname + './src/migrations/*.ts'],
+  migrationsRun: true,
+};
+
+export const dataSource: DataSource = new DataSource(typeOrmConfig);
