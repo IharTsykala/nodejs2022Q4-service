@@ -63,12 +63,9 @@ export class FavoritesController {
   async createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = await this.findOneArtist(id);
 
-    console.log('artist', artist);
     if (!artist) {
       throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
-    console.log('artist2', artist);
 
     return this.favoritesService.add('artists', id);
   }

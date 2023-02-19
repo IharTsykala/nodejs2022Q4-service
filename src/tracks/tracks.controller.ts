@@ -85,8 +85,6 @@ export class TracksController {
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const track = await this.tracksService.findOne(id);
 
-    // console.log('track', track);
-
     if (!track) {
       throw new NotFoundException();
     }

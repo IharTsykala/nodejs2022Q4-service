@@ -1,11 +1,5 @@
 import { Exclude } from 'class-transformer';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IsUUID } from 'class-validator';
 
 @Entity({ name: 'Users' })
@@ -33,9 +27,4 @@ export class User {
   constructor(fields: Partial<User>) {
     Object.assign(this, fields);
   }
-
-  // toResponse() {
-  //   const { id, login, version, createdAt, updatedAt } = this;
-  //   return { id, login, version, createdAt, updatedAt };
-  // }
 }

@@ -147,8 +147,6 @@ export class UsersController {
 
     const updatedUser = await this.usersService.update(user, updateUserDto);
 
-    // console.log('updatedUser', updatedUser);
-
     if (!updatedUser) {
       throw new ForbiddenException();
     }
@@ -177,11 +175,6 @@ export class UsersController {
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = (await this.findOne(id)) as User | undefined;
 
-    // if (!user) {
-    //   throw new NotFoundException();
-    // }
-
-    console.log('user', user);
     return await this.usersService.remove(user);
   }
 }

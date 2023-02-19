@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
-// import Database from '../bd';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,8 +14,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const createdUser = await this.storage.create(createUserDto);
-
-    // console.log('createdUser', createdUser);
 
     return this.storage.save(createdUser);
   }
@@ -34,12 +31,9 @@ export class UsersService {
   async update(user: User, updatePasswordDto: UpdatePasswordDto) {
     const { oldPassword, newPassword } = updatePasswordDto;
 
-    // console.log('user', user);
     if (oldPassword !== user.password) {
       return;
     }
-
-    // console.log('user2', user);
 
     user.version++;
     user.updatedAt = Math.floor(Date.now() / 1000);

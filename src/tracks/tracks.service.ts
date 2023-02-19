@@ -29,7 +29,6 @@ export class TracksService {
       where: { id },
     });
 
-    // console.log('result', result);
     return result;
   }
 

@@ -19,7 +19,6 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { validate as uuidValidate } from 'uuid';
-import { Artist } from '../artists/entities/artist.entity';
 
 @Controller('album')
 export class AlbumsController {

@@ -14,9 +14,6 @@ import { Favorite } from './entities/favorite.entity';
     forwardRef(() => ArtistsModule),
     forwardRef(() => AlbumsModule),
     forwardRef(() => TracksModule),
-    // ArtistsModule,
-    // AlbumsModule,
-    // TracksModule,
     TypeOrmModule.forFeature([Favorite]),
   ],
 })
