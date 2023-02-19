@@ -16,11 +16,11 @@ export class Artist {
   @Column({ default: false })
   grammy: boolean;
 
-  // @OneToMany(() => Album, (album) => album.artist, { cascade: true })
-  // @Exclude()
-  // albums: Album[];
-  //
-  // @OneToMany(() => Track, (track) => track.artist, { cascade: true })
-  // @Exclude()
-  // tracks: Track[];
+  @OneToMany(() => Album, (album) => album.artist, { cascade: true })
+  @Exclude()
+  albums: Album[];
+
+  @OneToMany(() => Track, (track) => track.artist, { cascade: true })
+  @Exclude()
+  tracks: Track[];
 }

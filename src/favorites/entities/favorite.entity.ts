@@ -23,7 +23,7 @@ export class Favorite {
   artists: string[]; // favorite artists ids
 
   @JoinTable()
-  // @ManyToMany(() => Album, { onDelete: 'CASCADE', eager: true })
+  @ManyToMany(() => Album, { onDelete: 'CASCADE', eager: true })
   albums: string[]; // favorite albums ids
 
   @JoinTable()

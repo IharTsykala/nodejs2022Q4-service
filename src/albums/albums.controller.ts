@@ -102,6 +102,6 @@ export class AlbumsController {
       throw new NotFoundException();
     }
 
-    return this.albumsService.remove(album);
+    return this.albumsService.remove(id);
   }
 }

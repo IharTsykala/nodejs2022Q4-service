@@ -38,7 +38,7 @@ export class AlbumsService {
     return await this.storage.save(createdAlbum);
   }
 
-  async remove(album: Album) {
-    return await this.storage.delete(album);
+  async remove(id: string) {
+    return await this.storage.delete({ id });
   }
 }

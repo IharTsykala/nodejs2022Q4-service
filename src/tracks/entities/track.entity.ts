@@ -22,17 +22,17 @@ export class Track {
   @Column()
   duration: number; // integer number
 
-  // @ManyToOne(() => Album, (album) => album.tracks, {
-  //   nullable: true,
-  //   onDelete: 'SET NULL',
-  // })
-  // @Exclude()
-  // album: Album;
-  //
-  // @ManyToOne(() => Artist, (artist) => artist.tracks, {
-  //   nullable: true,
-  //   onDelete: 'SET NULL',
-  // })
-  // @Exclude()
-  // artist: Artist;
+  @ManyToOne(() => Album, (album) => album.tracks, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @Exclude()
+  album: Album;
+
+  @ManyToOne(() => Artist, (artist) => artist.tracks, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @Exclude()
+  artist: Artist;
 }

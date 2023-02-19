@@ -145,7 +145,9 @@ export class UsersController {
   ) {
     const user = (await this.findOne(id)) as User | undefined;
 
-    const updatedUser = this.usersService.update(user, updateUserDto);
+    const updatedUser = await this.usersService.update(user, updateUserDto);
+
+    // console.log('updatedUser', updatedUser);
 
     if (!updatedUser) {
       throw new ForbiddenException();

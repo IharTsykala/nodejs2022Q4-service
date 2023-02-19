@@ -16,7 +16,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const createdUser = await this.storage.create(createUserDto);
 
-    console.log('createdUser', createdUser);
+    // console.log('createdUser', createdUser);
 
     return this.storage.save(createdUser);
   }
@@ -34,12 +34,19 @@ export class UsersService {
   async update(user: User, updatePasswordDto: UpdatePasswordDto) {
     const { oldPassword, newPassword } = updatePasswordDto;
 
+    // console.log('user', user);
     if (oldPassword !== user.password) {
       return;
     }
 
+    // console.log('user2', user);
+
+    user.version++;
+    user.updatedAt = Math.floor(Date.now() / 10000);
+
     const updatedUser = await this.storage.create({
       ...user,
+
       password: newPassword,
     });
 

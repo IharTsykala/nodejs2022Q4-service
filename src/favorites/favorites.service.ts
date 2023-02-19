@@ -36,6 +36,7 @@ export class FavoritesService {
   ) {}
 
   async getAll() {
+    console.log('getAll');
     const [favorites] = await this.favoritesStorage.find({
       relations: {
         tracks: true,
@@ -43,6 +44,7 @@ export class FavoritesService {
         artists: true,
       },
     });
+    console.log('favorites', favorites);
 
     if (!favorites) {
       await this.favoritesStorage.save(new Favorite());

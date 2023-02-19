@@ -24,10 +24,13 @@ export class TracksService {
     return this.storage.find();
   }
 
-  findOne(id: string) {
-    return this.storage.findOne({
+  async findOne(id: string) {
+    const result = await this.storage.findOne({
       where: { id },
     });
+
+    // console.log('result', result);
+    return result;
   }
 
   update(track: Track, updateTrackDto: UpdateTrackDto) {
@@ -39,7 +42,7 @@ export class TracksService {
     return this.storage.save(createdTrack);
   }
 
-  remove(track: Track) {
-    return this.storage.delete(track);
+  async remove(id: string) {
+    return await this.storage.delete({ id });
   }
 }

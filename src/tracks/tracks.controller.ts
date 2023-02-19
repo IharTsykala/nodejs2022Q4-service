@@ -82,8 +82,10 @@ export class TracksController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const track = this.tracksService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = await this.tracksService.findOne(id);
+
+    // console.log('track', track);
 
     if (!track) {
       throw new NotFoundException();
@@ -135,6 +137,6 @@ export class TracksController {
       throw new NotFoundException();
     }
 
-    return this.tracksService.remove(track);
+    return this.tracksService.remove(id);
   }
 }
