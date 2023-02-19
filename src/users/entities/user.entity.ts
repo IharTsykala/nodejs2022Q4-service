@@ -24,27 +24,11 @@ export class User {
   @Column({ default: 1 })
   version: number; // integer number, increments on update
 
-  // @Column()
-  // createdAt: number; // timestamp of creation
-  //
-  // @Column()
-  // updatedAt: number; // timestamp of last update
+  @Column({ default: Math.floor(Date.now() / 10000) })
+  createdAt: number;
 
-  @CreateDateColumn({
-    transformer: {
-      to: (value: Date) => value,
-      from: (value: Date) => value.getTime(),
-    },
-  })
-  createdAt!: Date; // timestamp of creation;
-
-  @UpdateDateColumn({
-    transformer: {
-      to: (value: Date) => value,
-      from: (value: Date) => value.getTime(),
-    },
-  })
-  updatedAt!: Date; // timestamp of last update;
+  @Column({ default: Math.floor(Date.now() / 10000) })
+  updatedAt: number;
 
   constructor(fields: Partial<User>) {
     Object.assign(this, fields);

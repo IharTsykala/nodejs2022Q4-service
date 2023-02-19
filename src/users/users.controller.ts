@@ -175,9 +175,11 @@ export class UsersController {
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = (await this.findOne(id)) as User | undefined;
 
-    if (!user) {
-      throw new NotFoundException();
-    }
+    // if (!user) {
+    //   throw new NotFoundException();
+    // }
+
+    console.log('user', user);
     return await this.usersService.remove(user);
   }
 }
