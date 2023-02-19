@@ -24,7 +24,7 @@ export class ArtistsService {
   }
 
   async findOne(id: string) {
-    return this.storage.findOne({
+    return await this.storage.findOne({
       where: { id },
     });
   }

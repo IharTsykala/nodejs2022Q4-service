@@ -1,19 +1,16 @@
-import {
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Favorite } from './entities/favorite.entity';
-import { Artist } from '../artists/entities/artist.entity';
-import { Album } from '../albums/entities/album.entity';
-import { Track } from '../tracks/entities/track.entity';
 import { Repository } from 'typeorm';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
 import { TracksService } from '../tracks/tracks.service';
+
+const storages = {
+  tracks: 'tracksStorage',
+  albums: 'albumsStorage',
+  artists: 'artistsStorage',
+};
 
 @Injectable()
 export class FavoritesService {
@@ -24,31 +21,23 @@ export class FavoritesService {
     private readonly albumsStorage: AlbumsService,
     @Inject(forwardRef(() => TracksService))
     private readonly tracksStorage: TracksService,
-
-    // @InjectRepository(Artist)
-    // private readonly artistsStorage: Repository<Artist>,
-    // @InjectRepository(Album)
-    // private readonly albumsStorage: Repository<Album>,
-    // @InjectRepository(Track)
-    // private readonly tracksStorage: Repository<Track>,
     @InjectRepository(Favorite)
     private readonly favoritesStorage: Repository<Favorite>,
   ) {}
 
   async getAll() {
-    console.log('getAll');
-    const [favorites] = await this.favoritesStorage.find({
-      relations: {
-        tracks: true,
-        albums: true,
-        artists: true,
-      },
-    });
-    console.log('favorites', favorites);
-
-    if (!favorites) {
-      await this.favoritesStorage.save(new Favorite());
-      return this.getAll();
+    const favorites = { artists: [], albums: [], tracks: [] };
+    const allFavorites = await this.favoritesStorage.find();
+    for (const entityName in storages) {
+      favorites[entityName] = (
+        await Promise.all(
+          allFavorites
+            .filter(({ entity }) => entity === entityName)
+            .map(async ({ entityId, entity }) => {
+              return await this[storages[entity]].findOne(entityId);
+            }),
+        )
+      ).filter(Boolean);
     }
 
     return favorites;
@@ -64,44 +53,11 @@ export class FavoritesService {
     return favorites;
   }
 
-  // add(entity: string, id: string) {
-  //   return this[`${entity}Storage`].addFavorites(entity, id);
-  // }
-
-  async add(entity: string, id: string): Promise<Artist | Album | Track> {
-    const favorites = await this.getAll();
-    const itemEntity = await this[`${entity}Storage`].findOneBy({ id });
-
-    if (!itemEntity) {
-      throw new HttpException(
-        'UNPROCESSABLE_ENTITY',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-
-    const isEntity = favorites.albums.includes(itemEntity);
-
-    if (!isEntity) {
-      favorites.albums.push(itemEntity);
-    }
-
-    await this.favoritesStorage.save(favorites);
-
-    return itemEntity;
+  async add(entity: string, id: string) {
+    return await this.favoritesStorage.save({ entityId: id, entity });
   }
 
   async remove(entity: string, id: string) {
-    const favorites = await this.getAll();
-    const entityIndex = favorites[entity].findIndex(
-      (itemEntity) => itemEntity.id == id,
-    );
-
-    if (entityIndex === -1) {
-      throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
-    }
-
-    favorites[entity].splice(entityIndex, 1);
-
-    await this.favoritesStorage.save(favorites);
+    return await this.favoritesStorage.delete({ entityId: id, entity });
   }
 }

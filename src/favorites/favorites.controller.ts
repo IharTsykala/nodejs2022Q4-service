@@ -25,12 +25,12 @@ export class FavoritesController {
     private readonly albumsService: AlbumsService,
   ) {}
 
-  findOneArtist(id: string) {
+  async findOneArtist(id: string) {
     if (!uuidValidate(id)) {
       throw new HttpException('not uuid', HttpStatus.BAD_REQUEST);
     }
 
-    return this.artistsService.findOne(id);
+    return await this.artistsService.findOne(id);
   }
 
   findOneAlbum(id: string) {
@@ -60,12 +60,15 @@ export class FavoritesController {
   }
 
   @Post('/artist/:id')
-  createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    const artist = this.findOneArtist(id);
+  async createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const artist = await this.findOneArtist(id);
 
+    console.log('artist', artist);
     if (!artist) {
       throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    console.log('artist2', artist);
 
     return this.favoritesService.add('artists', id);
   }
@@ -88,8 +91,8 @@ export class FavoritesController {
   }
 
   @Post('/album/:id')
-  createAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const album = this.findOneAlbum(id);
+  async createAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const album = await this.findOneAlbum(id);
 
     if (!album) {
       throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);
@@ -116,8 +119,8 @@ export class FavoritesController {
   }
 
   @Post('/track/:id')
-  createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const track = this.findOneTrack(id);
+  async createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = await this.findOneTrack(id);
 
     if (!track) {
       throw new HttpException('not same id', HttpStatus.UNPROCESSABLE_ENTITY);

@@ -33,8 +33,8 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const artist = this.artistsService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const artist = await this.artistsService.findOne(id);
 
     if (!artist) {
       throw new NotFoundException();

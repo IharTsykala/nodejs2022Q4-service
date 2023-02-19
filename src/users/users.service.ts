@@ -42,7 +42,7 @@ export class UsersService {
     // console.log('user2', user);
 
     user.version++;
-    user.updatedAt = Math.floor(Date.now() / 10000);
+    user.updatedAt = Math.floor(Date.now() / 1000);
 
     const updatedUser = await this.storage.create({
       ...user,
