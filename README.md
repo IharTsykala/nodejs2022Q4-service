@@ -11,6 +11,12 @@
 git clone https://github.com/IharTsykala/nodejs2022Q4-service
 ```
 
+## Move to connectDB branch:
+
+```
+ git checkout connectDB
+```
+
 ## Installing NPM modules
 
 ```
@@ -23,6 +29,24 @@ npm install
 npm start
 
 **Create .env and copy past content from .env.example file**
+```
+
+## Work in docker
+
+```
+npm run docker
+```
+
+## Npm script for vulnerabilities scanning
+
+ ```
+ npm run docker:scan
+```
+
+## Check containers size
+
+```
+docker images
 ```
 
 After starting the app on port (4000 as default) you can open

@@ -11,7 +11,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleOptions = {
   imports: [ConfigModule],
   inject: [ConfigService],
   useFactory: async (config: ConfigService) => ({
-    type: 'postgres',
+    type: config.get('TYPE_BD') as string,
     host: config.get('POSTGRES_HOST') as string,
     username: config.get('POSTGRES_USER') as string,
     password: config.get('POSTGRES_PASSWORD') as string,

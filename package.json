@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "docker": "docker-compose up --build",
-    "docker:scan": "docker scan my_app",
+    "docker:scan": "docker scan nodejs2022q4-service-my_app",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

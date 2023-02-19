@@ -20,7 +20,6 @@ import { Track } from './entities/track.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
 import { validate as uuidValidate } from 'uuid';
-import { Artist } from '../artists/entities/artist.entity';
 
 @Controller('track')
 export class TracksController {

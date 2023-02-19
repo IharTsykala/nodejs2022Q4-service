@@ -58,20 +58,6 @@ services:
     networks:
       - my_network
 
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    depends_on:
-      - my_db
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
-    networks:
-      - my_network
-
 volumes:
   my_db:
   logs:

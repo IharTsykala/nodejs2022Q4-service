@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
-import Database from '../bd';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Artist } from '../artists/entities/artist.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
