@@ -38,6 +38,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    image: ihartsykala/nodejs2022q4-service-my_app
     volumes:
       - .:/app
       - nodemodules:/app/node_modules
@@ -51,7 +52,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
       POSTGRES_DB: ${POSTGRES_DB:-rest_api}
       POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_HOST: my_db
+      POSTGRES_HOST: ${DB_HOST}
     restart: always
     depends_on:
       - my_db
