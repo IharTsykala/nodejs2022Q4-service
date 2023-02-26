@@ -8,6 +8,8 @@ import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmAsyncConfig } from './orm.config';
+import { LoggerModule } from './logger/logger.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { typeOrmAsyncConfig } from './orm.config';
     TracksModule,
     FavoritesModule,
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    LoggerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
