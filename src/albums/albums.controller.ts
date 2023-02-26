@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -19,8 +20,10 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { ArtistsService } from '../artists/artists.service';
 import { validate as uuidValidate } from 'uuid';
+import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('album')
+@UseGuards(JwtAuthGuard)
 export class AlbumsController {
   constructor(
     private readonly albumsService: AlbumsService,

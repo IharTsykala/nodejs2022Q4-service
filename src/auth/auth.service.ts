@@ -27,8 +27,8 @@ export class AuthService {
     const accessToken = await this.getJWT({
       userId,
       login,
-      secret: process.env.JWT_ACCESS_SECRET_KEY,
-      expiresIn: process.env.TOKEN_ACCESS_EXPIRE_TIME,
+      secret: process.env.JWT_SECRET_KEY,
+      expiresIn: process.env.TOKEN_EXPIRE_TIME,
     });
 
     const refreshToken = await this.getJWT({

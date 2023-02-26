@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { LoginDto } from './dto/login.dto';
 
 export interface ITokens {
   accessToken: string;
@@ -28,7 +29,7 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async signUp(@Body() body: CreateUserDto): Promise<User> {
+  async signUp(@Body() body: LoginDto): Promise<User> {
     const { login, password } = body;
     const hashPassword = await this.authService.signUpHash(password);
 
@@ -37,7 +38,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() body: CreateUserDto): Promise<ITokens> {
+  async login(@Body() body: LoginDto): Promise<ITokens> {
     const { login, password } = body;
 
     const user = await this.usersService.findOne(login, 'login');
@@ -57,7 +58,6 @@ export class AuthController {
     return this.authService.getTokens(user.id, login);
   }
 
-  // @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   async refresh(@Body() body): Promise<ITokens> {
     const { refreshToken } = body;

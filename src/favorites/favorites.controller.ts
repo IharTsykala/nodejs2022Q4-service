@@ -9,14 +9,17 @@ import {
   HttpException,
   HttpCode,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { TracksService } from '../tracks/tracks.service';
 import { ArtistsService } from '../artists/artists.service';
 import { AlbumsService } from '../albums/albums.service';
 import { validate as uuidValidate } from 'uuid';
+import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('favs')
+@UseGuards(JwtAuthGuard)
 export class FavoritesController {
   constructor(
     private readonly favoritesService: FavoritesService,
