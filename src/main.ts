@@ -25,13 +25,13 @@ async function bootstrap() {
 
   await app.listen(PORT);
 
-  process.on('uncaughtException', (e) => {
-    console.error(`uncaughtException: ${e}`);
-    process.exit(1);
-  });
-
-  process.on('unhandledRejection', (e) => {
-    console.error(`unhandledRejection: ${e}`);
-  });
+  process
+    .on('unhandledRejection', (e) => {
+      app.get(LoggerService).error(`uncaughtException: ${e}`);
+    })
+    .on('uncaughtException', (e) => {
+      app.get(LoggerService).error(`uncaughtException: ${e}`);
+    });
+  app.useLogger(app.get(LoggerService));
 }
 bootstrap().then();

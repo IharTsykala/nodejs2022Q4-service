@@ -20,7 +20,7 @@ import { DocModule } from './doc/doc.module';
     TracksModule,
     FavoritesModule,
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-    // LoggerModule,
+    LoggerModule,
     AuthModule,
     DocModule,
   ],
