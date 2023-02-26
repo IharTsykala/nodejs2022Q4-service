@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmAsyncConfig } from './orm.config';
 import { LoggerModule } from './logger/logger.module';
 import { AuthModule } from './auth/auth.module';
+import { DocModule } from './doc/doc.module';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { AuthModule } from './auth/auth.module';
     TracksModule,
     FavoritesModule,
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-    LoggerModule,
+    // LoggerModule,
     AuthModule,
+    DocModule,
   ],
   controllers: [AppController],
   providers: [AppService],
