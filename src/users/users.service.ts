@@ -22,9 +22,9 @@ export class UsersService {
     return await this.storage.find();
   }
 
-  async findOne(id: string) {
+  async findOne(fieldValue: string, fieldName: string = 'id') {
     return await this.storage.findOne({
-      where: { id },
+      where: { [fieldName]: fieldValue },
     });
   }
 
