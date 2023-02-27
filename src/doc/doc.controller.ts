@@ -1,6 +1,5 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DocService } from './doc.service';
-import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('doc')
 export class DocController {

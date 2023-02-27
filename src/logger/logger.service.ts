@@ -50,6 +50,6 @@ export class LoggerService extends ConsoleLogger {
     setInterval(async () => {
       await this._anyLogs.writeLog();
       await this._errorLogs.writeLog();
-    }, 15);
+    }, Number(process.env.TIME_GENERATE));
   }
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -61,6 +62,10 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Body() body): Promise<ITokens> {
     const { refreshToken } = body;
+
+    if (!refreshToken) {
+      throw new BadRequestException();
+    }
 
     const { userId } = this.authService.verifyJWT(refreshToken);
 
