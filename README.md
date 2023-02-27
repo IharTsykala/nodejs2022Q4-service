@@ -14,7 +14,7 @@ git clone https://github.com/IharTsykala/nodejs2022Q4-service
 ## Move to connectDB branch:
 
 ```
- git checkout connectDB
+ git checkout authJWT
 ```
 
 ## Installing NPM modules
@@ -23,10 +23,10 @@ git clone https://github.com/IharTsykala/nodejs2022Q4-service
 npm install
 ```
 
-## Running application
+## Running application(please, use package.json scripts)
 
 ```
-npm start
+npm run start:dev
 
 **Create .env and copy past content from .env.example file**
 ```
@@ -60,7 +60,7 @@ After application running open new terminal and enter:
 To run all tests without authorization
 
 ```
-npm run test
+npm run test:auth
 ```
 
 To run only one of all test suites
