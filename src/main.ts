@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import { LoggerService } from './logger/logger.service';
@@ -16,6 +16,8 @@ async function bootstrap() {
     logger: new LoggerService(),
   });
 
+  const config = app.get(ConfigService);
+  app.useLogger(new LoggerService());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   app.enableCors();
@@ -34,7 +36,7 @@ async function bootstrap() {
     })
     .on('uncaughtException', (e) => {
       app.get(LoggerService).error(`uncaughtException: ${e}`);
+      process.exit(1);
     });
-  app.useLogger(app.get(LoggerService));
 }
 bootstrap().then();

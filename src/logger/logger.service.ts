@@ -1,85 +1,55 @@
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 
-import { join } from 'node:path';
-import { appendFile, mkdir, readdir, stat } from 'fs/promises';
+import { getEntity, getLogs } from './utils';
 
-const FORMAT_DATE_NUMERIC = 'numeric';
-
-const KEY_WORD = 'dist';
-
-const KB = 1024;
+import 'dotenv/config';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
-  currentDate = new Intl.DateTimeFormat('kz', {
-    year: FORMAT_DATE_NUMERIC,
-    month: FORMAT_DATE_NUMERIC,
-    day: FORMAT_DATE_NUMERIC,
-    hour: FORMAT_DATE_NUMERIC,
-    minute: FORMAT_DATE_NUMERIC,
-    second: FORMAT_DATE_NUMERIC,
-    hour12: false,
-  });
+  _anyLogs: getLogs;
+  _errorLogs: getLogs;
 
-  fileSize = Number(process.env.LOG_FILE_SIZE);
+  constructor() {
+    super('', {
+      logLevels: getEntity(Number(process.env.LOGGING)),
+    });
 
-  getPartPathFolder() {
-    const endPath = __dirname.indexOf(KEY_WORD) + KEY_WORD.length;
-    const folder = __dirname.slice(0, endPath);
-    return folder;
+    this._anyLogs = new getLogs('log');
+    this._errorLogs = new getLogs('error');
+
+    this._getFiles();
   }
 
-  async writeToFile(name: string, data: string, type: string) {
-    let getFile;
-    try {
-      getFile = (id = 1) =>
-        join(this.getPartPathFolder(), 'logsFiles', `${name}_${id}.txt`);
+  debug(msg: string, protocol: string) {
+    this._anyLogs.pushMessage(msg);
 
-      const pathToFolder = join(this.getPartPathFolder(), 'logsFiles');
-
-      await mkdir(pathToFolder, {
-        recursive: true,
-      });
-
-      const listFiles = (await readdir(pathToFolder)).filter(
-        (a) => a.split(`_`)[0] === name,
-      );
-
-      const { size: sizeFile } = await stat(getFile(listFiles.length));
-
-      const fileSizeInKB = sizeFile / KB;
-
-      if (fileSizeInKB > this.fileSize) {
-        return await appendFile(
-          getFile(listFiles.length + 1),
-          `${this.currentDate.format(Date.now())}_${type}: ${data} \n`,
-        );
-      }
-      await appendFile(
-        getFile(listFiles.length),
-        `${this.currentDate.format(Date.now())}_${type}: ${data} \n`,
-      );
-    } catch (e) {
-      console.log(e);
-      await appendFile(
-        getFile(),
-        `${this.currentDate.format(Date.now())}_${type}: ${data} \n`,
-      );
-    }
+    super.warn(msg, protocol);
   }
 
-  async log(message: string) {
-    await this.writeToFile('log', message, 'Log');
-    super.log(message);
+  error(msg: string) {
+    this._errorLogs.pushMessage(msg);
+
+    this._anyLogs.pushMessage(msg);
+
+    super.error(msg);
   }
 
-  async warn(message: string) {
-    await this.writeToFile('log', message, 'Warn');
-    super.warn(message);
+  log(msg: string, protocol: string) {
+    this._anyLogs.pushMessage(msg);
+
+    super.log(msg, protocol);
   }
 
-  async error(message: string, pos?: string) {
-    await this.writeToFile('err', pos, 'Err');
-    super.error(message);
+  warn(msg: string, protocol: string) {
+    this._anyLogs.pushMessage(msg);
+
+    super.warn(msg, protocol);
+  }
+
+  _getFiles() {
+    setInterval(async () => {
+      await this._anyLogs.writeLog();
+      await this._errorLogs.writeLog();
+    }, 15);
   }
 }
